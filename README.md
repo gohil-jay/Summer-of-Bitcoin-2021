@@ -2,7 +2,7 @@
 
 This repository contains my work on cryptocurrency based problem statement for Summer of Bitcoin 2021.
 
-# The problem
+## The problem
 
 Bitcoin miners construct blocks by selecting a set of transactions from their mempool. Each transaction in the mempool:
 
@@ -27,7 +27,7 @@ The output from the program should be txids, separated by newlines, which make a
 
 We've included a non-working ``` block_sample.txt ``` file to demonstrate the expected format.
   
-# Input file
+## Input file
   
 Here are two lines of the ``` mempool.csv ``` file:
 
@@ -40,7 +40,7 @@ This is a transaction with txid ``` 2e3da8... ```, fees of 452 satoshis, weight 
 This is a transaction with txid ``` 9d317f... ``` , fees of 350 satoshis, weight of 1400 and three parent transactions in the mempool with txids ``` 288ea9.... ``` , ``` b5b993... ``` and ``` c1ae3a... ```
 
 
-# Parsing the input file
+## Parsing the input file
   
 Here is some sample Python code to parse the input file. You may use this snippet in your solution if you want:
 
@@ -57,19 +57,69 @@ def parse_mempool_csv():
     return([MempoolTransaction(*line.strip().split(',')) for line in f.readlines()])
 ```
   
-# Hints
+## Hints
 
 - The total weight of transactions in a block must not exceed 4,000,000 weight. For this exercise assume that there is no coinbase transaction.
 - A transaction may only appear in a block if all of its parents appear **_earlier_** in the block.
 
-# General Advice
+## General Advice
 
 - Spend no more than two to three days on the exercise. The idea is not that you come up with a perfect solution, but that you think about your approach. First, make a naive solution that constructs a valid block, then iterate to improve it.
 - We’re most familiar with Python, C++, JavaScript, Java, Rust, Scheme, Lisp, Ruby, and Elixir and would prefer to receive solutions in those languages. If you’d like to use a different language, please check with us first to make sure we’ll be able to review it!
 - You should be able to explain your reasoning, design decisions, and trade-offs.
   
-# What to send us
+## What to send us
 
  - the source code for your solution (sending a GitHub repo URL works as well -- you will need to do this if you used JS)
  - the output from running the program with mempool.csv as block.txt .
  - You may optionally also include .git files to show your commit history
+
+<hr>
+<br>
+
+# Solution
+
+```
+import pandas as pd
+
+max_weight = 4000000
+block_weight = 0
+block_fee = 0
+included_transactions = []
+data = '/content/drive/MyDrive/Colab Notebooks/Summer of Bitcoin/mempool.csv'
+
+def allow_tx(id):
+  if id == "None":
+    return True
+  temp_id = id.split(';')
+
+  return (set(temp_id).issubset(set(included_transactions)))
+
+df = pd.read_csv(data)
+sorted_df = df.sort_values(by='fee', ascending=False)
+sorted_df = sorted_df.fillna("None")
+sorted_df.reset_index(inplace = True)
+
+for i in range(len(sorted_df)):
+
+  if ( (block_weight + (sorted_df['weight'][i])) <= max_weight ):
+    temp_parent = sorted_df.iloc[:, 4][i]
+
+    if (allow_tx(temp_parent)):
+      block_weight += sorted_df['weight'][i]
+      block_fee += sorted_df['fee'][i]
+      included_transactions.append(sorted_df['tx_id'][i])
+
+write_data = []
+for i in included_transactions:
+  temp = i + "\n"
+  write_data.append(temp)
+
+with open("block.txt",'w') as f:
+  for line in write_data:
+    f.write(line)
+
+from google.colab import files
+files.download('block.txt')
+```
+                                                             
