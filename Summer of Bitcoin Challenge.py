@@ -82,8 +82,4 @@ with open("block.txt",'w') as f:
 
 print("File write process successful!")
 
-# Downloading the updated block.txt file
-from google.colab import files
-files.download('block.txt')
-
 # Thank you!
