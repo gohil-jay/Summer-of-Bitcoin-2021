@@ -1,3 +1,5 @@
+# Jupyter notebook is converted to python here.
+
 # Importing libraries
 import pandas as pd
 
@@ -6,7 +8,7 @@ max_weight = 4000000
 block_weight = 0
 block_fee = 0
 included_transactions = []
-data = '/content/drive/MyDrive/Colab Notebooks/Summer of Bitcoin/mempool.csv'
+data = 'Add location here'
 
 # Function to check whether transaction should be allowed to be added to block transactions or not.
 # This function checks parent requirements only, as weight threshold check is done later.
