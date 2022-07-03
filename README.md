@@ -1,4 +1,4 @@
-# Summer of Bitcoin Code Challenge 2021
+# [Summer of Bitcoin Code](https://www.summerofbitcoin.org/) Challenge 2021
 
 This repository contains my work on cryptocurrency based problem statement for Summer of Bitcoin 2021.
 
